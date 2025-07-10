@@ -1,0 +1,53 @@
+{
+  "name": "disenio-sostenible-bowling-kata",
+  "version": "1.0.0",
+  "description": "SOON",
+  "main": "index.js",
+  "scripts": {
+    "analize": "npm run lint:fix && npm run compile",
+    "compile": "tsc --noEmit",
+    "compile:watch": "npm run compile -- --watch",
+    "compile:build": "tsc -b",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:watch": "esw --color --watch",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --config .prettierrc '**/*.+(ts|tsx)'",
+    "format:fix": "npm run format -- --write",
+    "test": "jest --verbose",
+    "test:watch": "npm run test -- --watchAll",
+    "test:coverage": "npm run test -- --coverage",
+    "upgrade": "ncu -u"
+  },
+  "author": "tomas95go",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-watch": "^8.0.0",
+    "husky": "^9.0.11",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
+    "npm-check-updates": "^16.14.18",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test"
+    }
+  },
+  "lint-staged": {
+    "*.+(ts|tsx)": [
+      "npm run lint:fix",
+      "npm run compile",
+      "git add . "
+    ]
+  }
+}
