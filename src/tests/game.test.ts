@@ -60,6 +60,16 @@ describe('game module', () => {
     expect(game.currentFrame).toBe(10);
   });
 
+  it('should knock down pins', () => {
+    const player = 'Ryu';
+
+    const game = Game.initialize(player);
+
+    game.knocksDownPins();
+
+    expect(game.currentAttemptKnockedDownPins).toBeGreaterThanOrEqual(0);
+  });
+
   it('should add amount of pins when player attempted to knock down pins', () => {
     const player = 'Ryu';
 
