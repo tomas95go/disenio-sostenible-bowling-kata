@@ -4,6 +4,7 @@ class Game {
   readonly player: string;
   readonly score: number;
   readonly frames: number = 10;
+  readonly currentFrame: number = 0;
 
   static initialize(player: string): Game {
     return new Game(player, 0);
@@ -24,5 +25,6 @@ describe('game module', () => {
     expect(game.player).toBe('Ryu');
     expect(game.score).toBe(0);
     expect(game.frames).toBe(10);
+    expect(game.currentFrame).toBe(0);
   });
 });
