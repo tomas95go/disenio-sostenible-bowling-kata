@@ -3,8 +3,11 @@ import { expect } from '@jest/globals';
 class Game {
   readonly player: string;
   readonly score: number;
-  readonly frames: number = 10;
+  readonly frames: number = 1;
+  readonly pins: number = 10;
+  readonly attemptPerFrame = 2;
   currentFrame: number = 1;
+  currentAttemptKnockedDownPins: number = 0;
 
   static initialize(player: string): Game {
     return new Game(player, 0);
@@ -19,11 +22,19 @@ class Game {
     let frame = this.currentFrame;
     for (frame; frame <= this.frames; frame++) {
       this.currentFrame = frame;
+      this.playerThrowsBall();
     }
   }
 
   playerThrowsBall(): void {
-    this.currentFrame += 1;
+    let currenAttempt = 1;
+    for (currenAttempt; currenAttempt <= this.attemptPerFrame; currenAttempt++) {
+      this.knocksDownPins();
+    }
+  }
+
+  knocksDownPins(): void {
+    this.currentAttemptKnockedDownPins = Math.floor(Math.random() * this.pins);
   }
 }
 
@@ -47,5 +58,15 @@ describe('game module', () => {
     game.play();
 
     expect(game.currentFrame).toBe(10);
+  });
+
+  it('should add amount of pins when player attempted to knock down pins', () => {
+    const player = 'Ryu';
+
+    const game = Game.initialize(player);
+
+    game.play();
+
+    expect(game.currentAttemptKnockedDownPins).toBeGreaterThan(0);
   });
 });
