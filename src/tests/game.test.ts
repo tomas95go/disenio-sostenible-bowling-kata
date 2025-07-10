@@ -46,18 +46,18 @@ describe('game module', () => {
 
     expect(game.player).toBe('Ryu');
     expect(game.score).toBe(0);
-    expect(game.frames).toBe(10);
-    expect(game.currentFrame).toBe(0);
+    expect(game.frames).toBe(1);
+    expect(game.currentFrame).toBe(1);
   });
 
-  it('should play 10 frames when game plays', () => {
+  it('should play 1 frame when game plays', () => {
     const player = 'Ryu';
 
     const game = Game.initialize(player);
 
     game.play();
 
-    expect(game.currentFrame).toBe(10);
+    expect(game.currentFrame).toBe(1);
   });
 
   it('should knock down pins', () => {
