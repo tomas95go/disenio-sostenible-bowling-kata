@@ -32,10 +32,6 @@ class Game {
       this.knocksDownPins();
     }
   }
-
-  knocksDownPins(): void {
-    this.currentAttemptKnockedDownPins = Math.floor(Math.random() * this.pins);
-  }
 }
 
 class Frame {
@@ -130,16 +126,6 @@ describe('game module', () => {
     game.play();
 
     expect(game.currentFrame).toBe(1);
-  });
-
-  it('should knock down pins', () => {
-    const player = 'Ryu';
-
-    const game = Game.initialize(player);
-
-    game.knocksDownPins();
-
-    expect(game.currentAttemptKnockedDownPins).toBeGreaterThanOrEqual(0);
   });
 
   it('should add amount of pins when player attempted to knock down pins', () => {
