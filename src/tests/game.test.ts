@@ -42,6 +42,7 @@ class Frame {
   readonly number: number;
   readonly maxAttempts: number = 2;
   private leftOverPins: number = 10;
+  private currentAttempt: number;
 
   static create(number: number): Frame {
     return new Frame(number);
@@ -55,8 +56,19 @@ class Frame {
     this.leftOverPins = this.leftOverPins - pins;
   }
 
+  play(attempt: number, pins: number): void {
+    this.currentAttempt = attempt;
+    if (this.currentAttempt <= this.maxAttempts) {
+      this.knockDown(pins);
+    }
+  }
+
   getLeftOverPins(): number {
     return this.leftOverPins;
+  }
+
+  getAttempt(): number {
+    return this.currentAttempt;
   }
 }
 
@@ -118,5 +130,14 @@ describe('frame module', () => {
     frame.knockDown(pins);
     const leftOverPins = frame.getLeftOverPins();
     expect(leftOverPins).toBe(6);
+  });
+
+  it('should play 1st attempt of a frame', () => {
+    const frame: Frame = Frame.create(2);
+    const firstAttempt = 1;
+    const knockedOutPins = 6;
+    frame.play(firstAttempt, knockedOutPins);
+    expect(frame.getAttempt()).toBe(firstAttempt);
+    expect(frame.getLeftOverPins()).toBe(4);
   });
 });
