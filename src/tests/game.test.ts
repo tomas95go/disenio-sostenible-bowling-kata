@@ -171,4 +171,19 @@ describe('frame module', () => {
     expect(frame.getLeftOverPins()).toBe(7);
     expect(frame.getScore()).toBe(firstAttemptKnockedOutPins);
   });
+
+  it('should add 2nd attempt score of a frame', () => {
+    const frame: Frame = Frame.create(7);
+    const firstAttempt = 1;
+    const firstAttemptKnockedOutPins = 3;
+    frame.play(firstAttempt, firstAttemptKnockedOutPins);
+
+    const secondAttempt = 2;
+    const secondAttemptKnockedOutPins = 1;
+    frame.play(secondAttempt, secondAttemptKnockedOutPins);
+
+    expect(frame.getAttempt()).toBe(secondAttempt);
+    expect(frame.getLeftOverPins()).toBe(6);
+    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
+  });
 });
