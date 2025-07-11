@@ -38,6 +38,20 @@ class Game {
   }
 }
 
+class Frame {
+  readonly number: number;
+  readonly maxAttempts: number = 2;
+  readonly leftOverPins: number = 10;
+
+  static create(number: number): Frame {
+    return new Frame(number);
+  }
+
+  constructor(number: number) {
+    this.number = number;
+  }
+}
+
 describe('game module', () => {
   it('should initialize a new game', () => {
     const player = 'Ryu';
@@ -78,5 +92,15 @@ describe('game module', () => {
     game.play();
 
     expect(game.currentAttemptKnockedDownPins).toBeGreaterThan(0);
+  });
+});
+
+describe('frame module', () => {
+  it('should initialize a frame when game plays', () => {
+    const frame: Frame = Frame.create(1);
+
+    expect(frame.number).toBe(1);
+    expect(frame.maxAttempts).toBe(2);
+    expect(frame.leftOverPins).toBe(10);
   });
 });
