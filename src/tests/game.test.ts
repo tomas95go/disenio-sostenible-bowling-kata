@@ -67,10 +67,16 @@ class Frame {
       if (this.isStrike()) {
         this.strike = true;
       }
-      if (this.currentAttempt === 2 && this.leftOverPins === 0) {
+      if (this.isSpare()) {
         this.spare = true;
       }
     }
+  }
+
+  private isSpare() {
+    const secondAttempt = 2;
+    const noLeftOverPins = 0;
+    return this.currentAttempt === secondAttempt && this.leftOverPins === noLeftOverPins;
   }
 
   isStrike(): boolean {
