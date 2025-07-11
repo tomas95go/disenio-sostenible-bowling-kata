@@ -44,6 +44,7 @@ class Frame {
   private leftOverPins: number = 10;
   private currentAttempt: number;
   private score: number = 0;
+  private strike: boolean = false;
 
   static create(number: number): Frame {
     return new Frame(number);
@@ -62,7 +63,16 @@ class Frame {
     if (this.currentAttempt <= this.maxAttempts) {
       this.score = this.score + pins;
       this.knockDown(pins);
+      if (this.isStrike()) {
+        this.strike = true;
+      }
     }
+  }
+
+  isStrike(): boolean {
+    const firstAttempt = 1;
+    const noLeftOverPins = 0;
+    return this.currentAttempt === firstAttempt && this.leftOverPins === noLeftOverPins;
   }
 
   getLeftOverPins(): number {
@@ -75,6 +85,10 @@ class Frame {
 
   getScore(): number {
     return this.score;
+  }
+
+  getStrike(): boolean {
+    return this.strike;
   }
 }
 
@@ -185,5 +199,17 @@ describe('frame module', () => {
     expect(frame.getAttempt()).toBe(secondAttempt);
     expect(frame.getLeftOverPins()).toBe(6);
     expect(frame.getScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
+  });
+
+  it('should determine strike when a player knocks down all 10 pins in 1st attempt of a frame', () => {
+    const frame: Frame = Frame.create(7);
+    const firstAttempt = 1;
+    const firstAttemptKnockedOutPins = 10;
+    frame.play(firstAttempt, firstAttemptKnockedOutPins);
+
+    expect(frame.getAttempt()).toBe(firstAttempt);
+    expect(frame.getLeftOverPins()).toBe(0);
+    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins);
+    expect(frame.getStrike()).toBe(true);
   });
 });
