@@ -155,7 +155,7 @@ describe('frame module', () => {
 
     expect(frame.number).toBe(1);
     expect(frame.maxAttempts).toBe(2);
-    expect(frame.getLeftOverPins).toBe(10);
+    expect(frame.getLeftOverPins()).toBe(10);
   });
 
   it('should knock down given pins', () => {
