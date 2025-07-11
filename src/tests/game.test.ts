@@ -41,7 +41,7 @@ class Game {
 class Frame {
   readonly number: number;
   readonly maxAttempts: number = 2;
-  readonly leftOverPins: number = 10;
+  private leftOverPins: number = 10;
 
   static create(number: number): Frame {
     return new Frame(number);
@@ -49,6 +49,14 @@ class Frame {
 
   constructor(number: number) {
     this.number = number;
+  }
+
+  knockDown(pins: number) {
+    this.leftOverPins = this.leftOverPins - pins;
+  }
+
+  getLeftOverPins(): number {
+    return this.leftOverPins;
   }
 }
 
@@ -101,6 +109,14 @@ describe('frame module', () => {
 
     expect(frame.number).toBe(1);
     expect(frame.maxAttempts).toBe(2);
-    expect(frame.leftOverPins).toBe(10);
+    expect(frame.getLeftOverPins).toBe(10);
+  });
+
+  it('should knock down given pins', () => {
+    const frame: Frame = Frame.create(5);
+    const pins = 4;
+    frame.knockDown(pins);
+    const leftOverPins = frame.getLeftOverPins();
+    expect(leftOverPins).toBe(6);
   });
 });
