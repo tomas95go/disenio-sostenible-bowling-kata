@@ -62,7 +62,7 @@ class Frame {
   play(attempt: number, pins: number): void {
     this.currentAttempt = attempt;
     if (this.currentAttempt <= this.maxAttempts) {
-      this.score = this.score + pins;
+      this.addScore(pins);
       this.knockDown(pins);
       if (this.isStrike()) {
         this.strike = true;
@@ -71,6 +71,10 @@ class Frame {
         this.spare = true;
       }
     }
+  }
+
+  private addScore(pins: number) {
+    this.score = this.score + pins;
   }
 
   private isSpare() {
