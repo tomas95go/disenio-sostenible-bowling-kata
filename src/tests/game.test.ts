@@ -140,4 +140,18 @@ describe('frame module', () => {
     expect(frame.getAttempt()).toBe(firstAttempt);
     expect(frame.getLeftOverPins()).toBe(4);
   });
+
+  it('should play 2nd attempt of a frame with leftover pins from 1st frame', () => {
+    const frame: Frame = Frame.create(7);
+    const firstAttempt = 1;
+    const firstAttemptKnockedOutPins = 3;
+    frame.play(firstAttempt, firstAttemptKnockedOutPins);
+
+    const secondAttempt = 2;
+    const secondAttemptKnockedOutPins = 1;
+    frame.play(secondAttempt, secondAttemptKnockedOutPins);
+
+    expect(frame.getAttempt()).toBe(secondAttempt);
+    expect(frame.getLeftOverPins()).toBe(6);
+  });
 });
