@@ -177,6 +177,28 @@ describe('game module', () => {
     expect(game.currentFrame).toBe(2);
     expect(game.score).toBe(22);
   });
+
+  it('should play 1 frame where player scores a spare', () => {
+    const player = 'Ryu';
+    const frames = 1;
+
+    const game = Game.initialize(player, frames);
+
+    const firstFrame = 1;
+    const firstFrameAttempt = 1;
+    const firstFrameAttemptKnockedDownPinsByPlayer = 6;
+
+    game.play(firstFrame, firstFrameAttempt, firstFrameAttemptKnockedDownPinsByPlayer);
+
+    const firstFrameSecondAttempt = 2;
+    const firstFrameSecondAttemptKnockedDownPinsByPlayer = 4;
+
+    game.play(firstFrame, firstFrameSecondAttempt, firstFrameSecondAttemptKnockedDownPinsByPlayer);
+
+    expect(game.frames).toBe(1);
+    expect(game.currentFrame).toBe(1);
+    expect(game.score).toBe(10);
+  });
 });
 
 describe('frame module', () => {
