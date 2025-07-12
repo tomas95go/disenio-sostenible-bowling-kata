@@ -3,16 +3,17 @@ import { expect } from '@jest/globals';
 class Game {
   readonly player: string;
   readonly score: number;
-  readonly frames: number = 1;
+  readonly frames: number;
   currentFrame: number = 1;
 
-  static initialize(player: string): Game {
-    return new Game(player, 0);
+  static initialize(player: string, frames: number): Game {
+    return new Game(player, 0, frames);
   }
 
-  constructor(player: string, score: number) {
+  constructor(player: string, score: number, frames: number) {
     this.player = player;
     this.score = score;
+    this.frames = frames;
   }
 
   play(): void {
@@ -98,19 +99,21 @@ class Frame {
 describe('game module', () => {
   it('should initialize a new game', () => {
     const player = 'Ryu';
+    const frames = 1;
 
-    const game = Game.initialize(player);
+    const game = Game.initialize(player, frames);
 
     expect(game.player).toBe('Ryu');
     expect(game.score).toBe(0);
-    expect(game.frames).toBe(1);
+    expect(game.frames).toBe(frames);
     expect(game.currentFrame).toBe(1);
   });
 
   it('should play 1 frame when game plays', () => {
     const player = 'Ryu';
+    const frames = 1;
 
-    const game = Game.initialize(player);
+    const game = Game.initialize(player, frames);
 
     game.play();
 
