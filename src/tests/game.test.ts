@@ -2,7 +2,7 @@ import { expect } from '@jest/globals';
 
 class Game {
   readonly player: string;
-  readonly score: number;
+  score: number;
   readonly frames: number;
   currentFrame: number = 1;
 
@@ -20,6 +20,11 @@ class Game {
     let frame = this.currentFrame;
     for (frame; frame <= this.frames; frame++) {
       this.currentFrame = frame;
+      const frame2 = Frame.create(this.currentFrame);
+      frame2.play(1, 10);
+      if (frame2.isStrike()) {
+        this.score = frame2.getScore();
+      }
     }
   }
 }
@@ -118,6 +123,19 @@ describe('game module', () => {
     game.play();
 
     expect(game.currentFrame).toBe(1);
+  });
+
+  it('should play 1 frame where player scores a strike', () => {
+    const player = 'Ryu';
+    const frames = 1;
+
+    const game = Game.initialize(player, frames);
+
+    game.play();
+
+    expect(game.frames).toBe(1);
+    expect(game.currentFrame).toBe(1);
+    expect(game.score).toBe(10);
   });
 });
 
