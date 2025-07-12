@@ -5,6 +5,7 @@ class Game {
   score: number;
   readonly frames: number;
   currentFrame: number;
+  strikeFrames: Frame[] = [];
 
   static initialize(player: string, frames: number): Game {
     return new Game(player, 0, frames);
@@ -20,7 +21,16 @@ class Game {
     this.currentFrame = frame;
     const currentFrame = Frame.create(this.currentFrame);
     currentFrame.play(frameAttempt, pins);
-    this.score = currentFrame.getScore();
+    this.score = this.score + currentFrame.getScore();
+    if (currentFrame.isStrike()) {
+      this.strikeFrames.push(currentFrame);
+    }
+    if (
+      this.strikeFrames.length > 0 &&
+      this.strikeFrames.filter((strikeFrame) => strikeFrame.number !== this.currentFrame).length > 0
+    ) {
+      this.score = this.score + currentFrame.getScore();
+    }
   }
 }
 
@@ -138,6 +148,34 @@ describe('game module', () => {
     expect(game.frames).toBe(1);
     expect(game.currentFrame).toBe(1);
     expect(game.score).toBe(10);
+  });
+
+  it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
+    const player = 'Ryu';
+    const frames = 2;
+
+    const game = Game.initialize(player, frames);
+
+    const firstFrame = 1;
+    const firstFrameAttempt = 1;
+    const firstFrameAttemptKnockedDownPinsByPlayer = 10;
+
+    game.play(firstFrame, firstFrameAttempt, firstFrameAttemptKnockedDownPinsByPlayer);
+
+    const secondFrame = 2;
+    const secondFrameFirstAttempt = 1;
+    const secondFrameFirstAttemptKnockedDownPinsByPlayer = 4;
+
+    game.play(secondFrame, secondFrameFirstAttempt, secondFrameFirstAttemptKnockedDownPinsByPlayer);
+
+    const secondFrameSecondAttempt = 1;
+    const secondFrameSecondAttemptKnockedDownPinsByPlayer = 2;
+
+    game.play(secondFrame, secondFrameSecondAttempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
+
+    expect(game.frames).toBe(2);
+    expect(game.currentFrame).toBe(2);
+    expect(game.score).toBe(22);
   });
 });
 
