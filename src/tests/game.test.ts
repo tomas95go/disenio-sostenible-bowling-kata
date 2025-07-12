@@ -4,7 +4,7 @@ class Game {
   readonly player: string;
   score: number;
   readonly frames: number;
-  currentFrame: number = 1;
+  currentFrame: number;
 
   static initialize(player: string, frames: number): Game {
     return new Game(player, 0, frames);
@@ -16,15 +16,12 @@ class Game {
     this.frames = frames;
   }
 
-  play(): void {
-    let frame = this.currentFrame;
-    for (frame; frame <= this.frames; frame++) {
-      this.currentFrame = frame;
-      const frame2 = Frame.create(this.currentFrame);
-      frame2.play(1, 10);
-      if (frame2.isStrike()) {
-        this.score = frame2.getScore();
-      }
+  play(frame: number, frameAttempt: number, pins: number): void {
+    this.currentFrame = frame;
+    const currentFrame = Frame.create(this.currentFrame);
+    currentFrame.play(frameAttempt, pins);
+    if (currentFrame.isStrike()) {
+      this.score = currentFrame.getScore();
     }
   }
 }
@@ -111,7 +108,6 @@ describe('game module', () => {
     expect(game.player).toBe('Ryu');
     expect(game.score).toBe(0);
     expect(game.frames).toBe(frames);
-    expect(game.currentFrame).toBe(1);
   });
 
   it('should play 1 frame when game plays', () => {
@@ -120,7 +116,11 @@ describe('game module', () => {
 
     const game = Game.initialize(player, frames);
 
-    game.play();
+    const currentFrame = 1;
+    const currentFrameAttempt = 1;
+    const knockedDownPinsByPlayer = 5;
+
+    game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
 
     expect(game.currentFrame).toBe(1);
   });
@@ -131,7 +131,11 @@ describe('game module', () => {
 
     const game = Game.initialize(player, frames);
 
-    game.play();
+    const currentFrame = 1;
+    const currentFrameAttempt = 1;
+    const knockedDownPinsByPlayer = 10;
+
+    game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
 
     expect(game.frames).toBe(1);
     expect(game.currentFrame).toBe(1);
