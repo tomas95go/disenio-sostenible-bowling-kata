@@ -20,9 +20,7 @@ class Game {
     this.currentFrame = frame;
     const currentFrame = Frame.create(this.currentFrame);
     currentFrame.play(frameAttempt, pins);
-    if (currentFrame.isStrike()) {
-      this.score = currentFrame.getScore();
-    }
+    this.score = currentFrame.getScore();
   }
 }
 
