@@ -5,7 +5,9 @@ class Game {
   score: number;
   readonly frames: number;
   currentFrame: number;
+  playedFrames: Frame[] = [];
   strikeFrames: Frame[] = [];
+  spareFrames: Frame[] = [];
 
   static initialize(player: string, frames: number): Game {
     return new Game(player, 0, frames);
@@ -19,9 +21,9 @@ class Game {
 
   play(frame: number, frameAttempt: number, pins: number): void {
     this.currentFrame = frame;
-    const currentFrame = Frame.create(this.currentFrame);
+    const currentFrame: Frame = this.getCurrentFrame(frame);
     currentFrame.play(frameAttempt, pins);
-    this.score = this.score + currentFrame.getScore();
+    this.score = this.score + pins;
     if (currentFrame.isStrike()) {
       this.strikeFrames.push(currentFrame);
     }
@@ -29,8 +31,27 @@ class Game {
       this.strikeFrames.length > 0 &&
       this.strikeFrames.filter((strikeFrame) => strikeFrame.number !== this.currentFrame).length > 0
     ) {
-      this.score = this.score + currentFrame.getScore();
+      this.score = this.score + pins;
     }
+    if (currentFrame.isSpare()) {
+      this.spareFrames.push(currentFrame);
+    }
+    if (
+      this.spareFrames.length > 0 &&
+      this.spareFrames.filter((spareFrame) => spareFrame.number !== this.currentFrame).length > 0 &&
+      currentFrame.getAttempt() === 1
+    ) {
+      this.score = this.score + pins;
+    }
+  }
+
+  private getCurrentFrame(frame: number): Frame {
+    if (this.playedFrames.filter((playedFrame) => playedFrame.number === frame).length === 0) {
+      const newFrame: Frame = Frame.create(this.currentFrame);
+      this.playedFrames.push(newFrame);
+      return newFrame;
+    }
+    return this.playedFrames.find((playedFrame) => playedFrame.number === frame);
   }
 }
 
@@ -73,7 +94,7 @@ class Frame {
     this.score = this.score + pins;
   }
 
-  private isSpare() {
+  isSpare() {
     const secondAttempt = 2;
     const noLeftOverPins = 0;
     return this.currentAttempt === secondAttempt && this.leftOverPins === noLeftOverPins;
@@ -198,6 +219,39 @@ describe('game module', () => {
     expect(game.frames).toBe(1);
     expect(game.currentFrame).toBe(1);
     expect(game.score).toBe(10);
+  });
+
+  it('should play 2 frames where player scores a spare on frame 1 and does an open frame on 2', () => {
+    const player = 'Ryu';
+    const frames = 2;
+
+    const game = Game.initialize(player, frames);
+
+    const firstFrame = 1;
+    const firstFrameAttempt = 1;
+    const firstFrameAttemptKnockedDownPinsByPlayer = 6;
+
+    game.play(firstFrame, firstFrameAttempt, firstFrameAttemptKnockedDownPinsByPlayer);
+
+    const firstFrameSecondAttempt = 2;
+    const firstFrameSecondAttemptKnockedDownPinsByPlayer = 4;
+
+    game.play(firstFrame, firstFrameSecondAttempt, firstFrameSecondAttemptKnockedDownPinsByPlayer);
+
+    const secondFrame = 2;
+    const secondFrameFirstAttempt = 1;
+    const secondFrameFirstAttemptKnockedDownPinsByPlayer = 3;
+
+    game.play(secondFrame, secondFrameFirstAttempt, secondFrameFirstAttemptKnockedDownPinsByPlayer);
+
+    const secondFrameSecondAttempt = 2;
+    const secondFrameSecondAttemptKnockedDownPinsByPlayer = 1;
+
+    game.play(secondFrame, secondFrameSecondAttempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
+
+    expect(game.frames).toBe(2);
+    expect(game.currentFrame).toBe(2);
+    expect(game.score).toBe(17);
   });
 });
 
