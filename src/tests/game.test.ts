@@ -23,26 +23,30 @@ class Game {
     this.currentFrame = frame;
     const currentFrame: Frame = this.getCurrentFrame(frame);
     currentFrame.play(frameAttempt, pins);
-    this.score = this.score + pins;
-    if (currentFrame.isStrike()) {
-      this.strikeFrames.push(currentFrame);
-    }
-    if (
-      this.strikeFrames.length > 0 &&
-      this.strikeFrames.filter((strikeFrame) => strikeFrame.number !== this.currentFrame).length > 0
-    ) {
-      this.score = this.score + pins;
-    }
-    if (currentFrame.isSpare()) {
-      this.spareFrames.push(currentFrame);
-    }
-    if (
-      this.spareFrames.length > 0 &&
-      this.spareFrames.filter((spareFrame) => spareFrame.number !== this.currentFrame).length > 0 &&
-      currentFrame.getAttempt() === 1
-    ) {
-      this.score = this.score + pins;
-    }
+  }
+
+  getScore() {
+    let accumulator = 0;
+    this.playedFrames.forEach((playedFrame) => {
+      if (playedFrame.isStrike()) {
+        const nextFrame = this.playedFrames.find((nextFrame) => playedFrame.number + 1 === nextFrame.number);
+        if (nextFrame) {
+          if (!nextFrame.isStrike()) {
+            accumulator += nextFrame.calculateScore();
+          }
+        }
+      }
+      if (playedFrame.isSpare()) {
+        const nextFrame = this.playedFrames.find((nextFrame) => playedFrame.number + 1 === nextFrame.number);
+        if (nextFrame) {
+          if (!nextFrame.isSpare()) {
+            accumulator += nextFrame.getFirstAttemptScore();
+          }
+        }
+      }
+      accumulator += playedFrame.calculateScore();
+    });
+    return accumulator;
   }
 
   private getCurrentFrame(frame: number): Frame {
@@ -61,6 +65,8 @@ class Frame {
   private leftOverPins: number = 10;
   private currentAttempt: number;
   private score: number = 0;
+  private firstAttemptScore: number = 0;
+  private secondAttemptScore: number = 0;
   private strike: boolean = false;
   private spare: boolean = false;
 
@@ -91,7 +97,12 @@ class Frame {
   }
 
   private addScore(pins: number) {
-    this.score = this.score + pins;
+    if (this.currentAttempt === 1) {
+      this.firstAttemptScore = this.firstAttemptScore + pins;
+    }
+    if (this.currentAttempt === 2) {
+      this.secondAttemptScore = this.secondAttemptScore + pins;
+    }
   }
 
   isSpare() {
@@ -114,8 +125,12 @@ class Frame {
     return this.currentAttempt;
   }
 
-  getScore(): number {
-    return this.score;
+  calculateScore(): number {
+    return this.score + this.firstAttemptScore + this.secondAttemptScore;
+  }
+
+  getFirstAttemptScore(): number {
+    return this.firstAttemptScore;
   }
 
   getStrike(): boolean {
@@ -168,7 +183,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(1);
     expect(game.currentFrame).toBe(1);
-    expect(game.score).toBe(10);
+    expect(game.getScore()).toBe(10);
   });
 
   it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
@@ -196,7 +211,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(2);
     expect(game.currentFrame).toBe(2);
-    expect(game.score).toBe(22);
+    expect(game.getScore()).toBe(22);
   });
 
   it('should play 1 frame where player scores a spare', () => {
@@ -218,7 +233,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(1);
     expect(game.currentFrame).toBe(1);
-    expect(game.score).toBe(10);
+    expect(game.getScore()).toBe(10);
   });
 
   it('should play 2 frames where player scores a spare on frame 1 and does an open frame on 2', () => {
@@ -251,7 +266,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(2);
     expect(game.currentFrame).toBe(2);
-    expect(game.score).toBe(17);
+    expect(game.getScore()).toBe(17);
   });
 
   it('should play a complete game where player scores all open frames', () => {
@@ -268,8 +283,10 @@ describe('game module', () => {
       }
     }
 
+    const gameScore = game.getScore();
+
     expect(game.frames).toBe(10);
-    expect(game.score).toBe(80);
+    expect(gameScore).toBe(80);
   });
 });
 
@@ -321,7 +338,7 @@ describe('frame module', () => {
 
     expect(frame.getAttempt()).toBe(firstAttempt);
     expect(frame.getLeftOverPins()).toBe(7);
-    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins);
+    expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins);
   });
 
   it('should add 2nd attempt score of a frame', () => {
@@ -336,7 +353,7 @@ describe('frame module', () => {
 
     expect(frame.getAttempt()).toBe(secondAttempt);
     expect(frame.getLeftOverPins()).toBe(6);
-    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
+    expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
   });
 
   it('should determine strike when a player knocks down all 10 pins in 1st attempt of a frame', () => {
@@ -347,7 +364,7 @@ describe('frame module', () => {
 
     expect(frame.getAttempt()).toBe(firstAttempt);
     expect(frame.getLeftOverPins()).toBe(0);
-    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins);
+    expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins);
     expect(frame.getStrike()).toBe(true);
   });
 
@@ -363,7 +380,7 @@ describe('frame module', () => {
 
     expect(frame.getAttempt()).toBe(secondAttempt);
     expect(frame.getLeftOverPins()).toBe(0);
-    expect(frame.getScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
+    expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
     expect(frame.getSpare()).toBe(true);
   });
 });
