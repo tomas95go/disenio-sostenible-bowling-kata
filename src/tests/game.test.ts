@@ -34,6 +34,13 @@ class Game {
           if (!nextFrame.isStrike()) {
             accumulator += nextFrame.calculateScore();
           }
+          if (nextFrame.isStrike()) {
+            const frameAfterNextFrame = this.playedFrames.find(
+              (nextFrame) => playedFrame.number + 2 === nextFrame.number
+            );
+            accumulator += nextFrame.calculateScore();
+            accumulator += frameAfterNextFrame.calculateScore();
+          }
         }
       }
       if (playedFrame.isSpare()) {
@@ -336,6 +343,36 @@ describe('game module', () => {
 
     expect(game.frames).toBe(10);
     expect(game.getScore()).toBe(140);
+  });
+
+  it('should play a complete game where player scores all strikes', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 1;
+    const firstAttempt = 1;
+    const secondAttempt = 2;
+    const thirdAttempt = 3;
+
+    const firstFrameFirstAttemptKnockedDownPinsByPlayer = 10;
+    const secondFrameFirstAttemptKnockedDownPinsByPlayer = 10;
+    const thirdFrameFirstAttemptKnockedDownPinsByPlayer = 10;
+
+    const lastFrame = 10;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame < game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        game.play(frame, attempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+      }
+    }
+
+    game.play(lastFrame, firstAttempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+    game.play(lastFrame, secondAttempt, secondFrameFirstAttemptKnockedDownPinsByPlayer);
+    game.play(lastFrame, thirdAttempt, thirdFrameFirstAttemptKnockedDownPinsByPlayer);
+
+    expect(game.frames).toBe(10);
+    expect(game.getScore()).toBe(300);
   });
 });
 
