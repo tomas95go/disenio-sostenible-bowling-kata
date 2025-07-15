@@ -39,9 +39,7 @@ class Game {
       if (playedFrame.isSpare()) {
         const nextFrame = this.playedFrames.find((nextFrame) => playedFrame.number + 1 === nextFrame.number);
         if (nextFrame) {
-          if (!nextFrame.isSpare()) {
-            accumulator += nextFrame.getFirstAttemptScore();
-          }
+          accumulator += nextFrame.getFirstAttemptScore();
         }
       }
       accumulator += playedFrame.calculateScore();
@@ -61,7 +59,7 @@ class Game {
 
 class Frame {
   readonly number: number;
-  readonly maxAttempts: number = 2;
+  maxAttempts: number = 2;
   private leftOverPins: number = 10;
   private currentAttempt: number;
   private score: number = 0;
@@ -93,6 +91,10 @@ class Frame {
       if (this.isSpare()) {
         this.spare = true;
       }
+      if (this.isSpare() && this.isLastFrame() && this.isSecondAttempt()) {
+        const extraAttemptOnLastFrame = 1;
+        this.maxAttempts += extraAttemptOnLastFrame;
+      }
     }
   }
 
@@ -102,6 +104,9 @@ class Frame {
     }
     if (this.currentAttempt === 2) {
       this.secondAttemptScore = this.secondAttemptScore + pins;
+    }
+    if (this.currentAttempt === 3) {
+      this.score = this.score + pins;
     }
   }
 
@@ -115,6 +120,16 @@ class Frame {
     const firstAttempt = 1;
     const noLeftOverPins = 0;
     return this.currentAttempt === firstAttempt && this.leftOverPins === noLeftOverPins;
+  }
+
+  isLastFrame(): boolean {
+    const lastFrame = 10;
+    return this.number === lastFrame;
+  }
+
+  isSecondAttempt(): boolean {
+    const secondAttempt = 2;
+    return this.currentAttempt === secondAttempt;
   }
 
   getLeftOverPins(): number {
@@ -287,6 +302,40 @@ describe('game module', () => {
 
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(80);
+  });
+
+  it('should play a complete game where player scores all spares', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 2;
+    const firstAttempt = 1;
+    const secondAttempt = 2;
+    const thirdAttempt = 3;
+
+    const firstFrameFirstAttemptKnockedDownPinsByPlayer = 4;
+    const secondFrameSecondAttemptKnockedDownPinsByPlayer = 6;
+
+    const lastFrame = 10;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame < game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        if (attempt === firstAttempt) {
+          game.play(frame, attempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+        }
+        if (attempt === secondAttempt) {
+          game.play(frame, attempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
+        }
+      }
+    }
+
+    game.play(lastFrame, firstAttempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+    game.play(lastFrame, secondAttempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
+    game.play(lastFrame, thirdAttempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+
+    expect(game.frames).toBe(10);
+    expect(game.getScore()).toBe(140);
   });
 });
 
