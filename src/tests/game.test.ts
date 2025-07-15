@@ -374,6 +374,34 @@ describe('game module', () => {
     expect(game.frames).toBe(10);
     expect(game.getScore()).toBe(300);
   });
+
+  it('should play a complete game where player scores 1 strike on frame 6 and the rest are open frame', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 2;
+
+    const firstFrameFirstAttemptKnockedDownPinsByPlayer = 2;
+
+    const sixthFrame = 6;
+    const sixthFrameFirstAttemptKnockedDownPinsByPlayer = 10;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame <= game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        if (frame === sixthFrame && attempt === 1) {
+          game.play(frame, attempt, sixthFrameFirstAttemptKnockedDownPinsByPlayer);
+          continue;
+        }
+        if (frame !== sixthFrame) {
+          game.play(frame, attempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
+        }
+      }
+    }
+
+    expect(game.frames).toBe(10);
+    expect(game.getScore()).toBe(50);
+  });
 });
 
 describe('frame module', () => {
