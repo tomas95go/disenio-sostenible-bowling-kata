@@ -453,6 +453,59 @@ describe('game module', () => {
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(20);
   });
+
+  it('should play a complete game where player does 1 spare, 1 open frame (50) and misses 17 attempts', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 2;
+
+    const spareFrame = 4;
+    const firstSpareFrameAttempt = 1;
+    const firstSpareFrameSecondAttemptKnockedDownPinsByPlayer = 5;
+    const secondSpareFrameAttempt = 2;
+    const secondSpareFrameAttemptKnockedDownPinsByPlayer = 5;
+
+    const frameAfterSpare = 5;
+    const firstFrameAfterSpareAttempt = 1;
+    const firstFrameAfterSpareAttemptKnockedDownPinsByPlayer = 5;
+    const secondFrameAfterSpareAttempt = 2;
+    const secondFrameAfterSpareAttemptKnockedDownPinsByPlayer = 0;
+
+    const knockedDownPinsByPlayerOnMissedAttempt = 0;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame <= game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        if (frame === spareFrame && attempt === firstSpareFrameAttempt) {
+          game.play(frame, attempt, firstSpareFrameSecondAttemptKnockedDownPinsByPlayer);
+          continue;
+        }
+
+        if (frame === spareFrame && attempt === secondSpareFrameAttempt) {
+          game.play(frame, attempt, secondSpareFrameAttemptKnockedDownPinsByPlayer);
+          continue;
+        }
+
+        if (frame === frameAfterSpare && attempt === firstFrameAfterSpareAttempt) {
+          game.play(frame, attempt, firstFrameAfterSpareAttemptKnockedDownPinsByPlayer);
+          continue;
+        }
+
+        if (frame === frameAfterSpare && attempt === secondFrameAfterSpareAttempt) {
+          game.play(frame, attempt, secondFrameAfterSpareAttemptKnockedDownPinsByPlayer);
+          continue;
+        }
+
+        game.play(frame, attempt, knockedDownPinsByPlayerOnMissedAttempt);
+      }
+    }
+
+    const gameScore = game.getScore();
+
+    expect(game.frames).toBe(10);
+    expect(gameScore).toBe(20);
+  });
 });
 
 describe('frame module', () => {
