@@ -26,22 +26,20 @@ class Game {
     let accumulator = 0;
     this.playedFrames.forEach((playedFrame) => {
       if (playedFrame.isStrike()) {
-        const nextFrame = this.playedFrames.find((nextFrame) => playedFrame.number + 1 === nextFrame.number);
+        const nextFrame: Frame = this.fetchNextFrame(playedFrame);
         if (nextFrame) {
           if (!nextFrame.isStrike()) {
             accumulator += nextFrame.calculateScore();
           }
           if (nextFrame.isStrike()) {
-            const frameAfterNextFrame = this.playedFrames.find(
-              (nextFrame) => playedFrame.number + 2 === nextFrame.number
-            );
+            const frameAfterNextFrame: Frame = this.fetchFrameAfterNextFrame(playedFrame);
             accumulator += nextFrame.calculateScore();
             accumulator += frameAfterNextFrame.calculateScore();
           }
         }
       }
       if (playedFrame.isSpare()) {
-        const nextFrame = this.playedFrames.find((nextFrame) => playedFrame.number + 1 === nextFrame.number);
+        const nextFrame: Frame = this.fetchNextFrame(playedFrame);
         if (nextFrame) {
           accumulator += nextFrame.getFirstAttemptScore();
         }
@@ -49,6 +47,19 @@ class Game {
       accumulator += playedFrame.calculateScore();
     });
     return accumulator;
+  }
+
+  private fetchFrameAfterNextFrame(playedFrame: Frame): Frame {
+    const NEXT_FRAME_NUMBER = 2;
+    return this.playedFrames.find((nextFrame: Frame) => playedFrame.number + NEXT_FRAME_NUMBER === nextFrame.number);
+  }
+
+  private fetchNextFrame(playedFrame: Frame): Frame {
+    const NEXT_FRAME_NUMBER = 1;
+    const nextFrame: Frame = this.playedFrames.find(
+      (nextFrame: Frame) => playedFrame.number + NEXT_FRAME_NUMBER === nextFrame.number
+    );
+    return nextFrame;
   }
 
   private getCurrentFrame(frame: number): Frame {
