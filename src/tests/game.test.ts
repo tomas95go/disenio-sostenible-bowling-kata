@@ -402,6 +402,26 @@ describe('game module', () => {
     expect(game.frames).toBe(10);
     expect(game.getScore()).toBe(50);
   });
+
+  it('should play a complete game where player misses on ALL frames, scoring 0', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 2;
+    const knockedDownPinsByPlayer = 0;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame <= game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        game.play(frame, attempt, knockedDownPinsByPlayer);
+      }
+    }
+
+    const gameScore = game.getScore();
+
+    expect(game.frames).toBe(10);
+    expect(gameScore).toBe(0);
+  });
 });
 
 describe('frame module', () => {
