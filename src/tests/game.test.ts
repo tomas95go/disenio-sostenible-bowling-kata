@@ -103,13 +103,16 @@ class Frame {
   }
 
   private addScore(pins: number) {
-    if (this.currentAttempt === 1) {
+    const firstAttempt = 1;
+    const secondAttempt = 2;
+    const thirdAttempt = 3;
+    if (this.currentAttempt === firstAttempt) {
       this.firstAttemptScore = this.firstAttemptScore + pins;
     }
-    if (this.currentAttempt === 2) {
+    if (this.currentAttempt === secondAttempt) {
       this.secondAttemptScore = this.secondAttemptScore + pins;
     }
-    if (this.currentAttempt === 3) {
+    if (this.currentAttempt === thirdAttempt) {
       this.score = this.score + pins;
     }
   }
