@@ -2,18 +2,17 @@ import { expect } from '@jest/globals';
 
 class Game {
   readonly player: string;
-  score: number;
+  score: number = 0;
   readonly frames: number;
   currentFrame: number;
   playedFrames: Frame[] = [];
 
   static initialize(player: string, frames: number): Game {
-    return new Game(player, 0, frames);
+    return new Game(player, frames);
   }
 
-  constructor(player: string, score: number, frames: number) {
+  constructor(player: string, frames: number) {
     this.player = player;
-    this.score = score;
     this.frames = frames;
   }
 
