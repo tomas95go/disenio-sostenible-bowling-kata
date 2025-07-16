@@ -6,8 +6,6 @@ class Game {
   readonly frames: number;
   currentFrame: number;
   playedFrames: Frame[] = [];
-  strikeFrames: Frame[] = [];
-  spareFrames: Frame[] = [];
 
   static initialize(player: string, frames: number): Game {
     return new Game(player, 0, frames);
