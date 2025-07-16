@@ -62,12 +62,14 @@ class Game {
   }
 
   private getCurrentFrame(frame: number): Frame {
-    if (this.playedFrames.filter((playedFrame) => playedFrame.number === frame).length === 0) {
+    const currentFrame: Frame = this.playedFrames.find((playedFrame: Frame) => playedFrame.number === frame);
+
+    if (!currentFrame) {
       const newFrame: Frame = Frame.create(this.currentFrame);
       this.playedFrames.push(newFrame);
       return newFrame;
     }
-    return this.playedFrames.find((playedFrame) => playedFrame.number === frame);
+    return currentFrame;
   }
 }
 
