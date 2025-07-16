@@ -422,6 +422,37 @@ describe('game module', () => {
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(0);
   });
+
+  it('should play a complete game where player score 1 on all frame attempts', () => {
+    const player = 'Ryu';
+    const frames = 10;
+    const maxAttemptsPerFrame = 2;
+
+    const firstAttempt = 1;
+    const firstAttemptknockedDownPinsByPlayer = 1;
+
+    const secondAttempt = 2;
+    const secondAttemptknockedDownPinsByPlayer = 1;
+
+    const game = Game.initialize(player, frames);
+
+    for (let frame = 1; frame <= game.frames; frame++) {
+      for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
+        if (attempt === firstAttempt) {
+          game.play(frame, attempt, firstAttemptknockedDownPinsByPlayer);
+        }
+
+        if (attempt === secondAttempt) {
+          game.play(frame, attempt, secondAttemptknockedDownPinsByPlayer);
+        }
+      }
+    }
+
+    const gameScore = game.getScore();
+
+    expect(game.frames).toBe(10);
+    expect(gameScore).toBe(20);
+  });
 });
 
 describe('frame module', () => {
