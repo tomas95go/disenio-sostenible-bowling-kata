@@ -19,17 +19,7 @@ class Game {
     let accumulator = 0;
     this.playedFrames.forEach((playedFrame) => {
       if (playedFrame.isStrike()) {
-        const nextFrame: Frame = this.fetchNextFrame(playedFrame);
-        if (nextFrame) {
-          if (!nextFrame.isStrike()) {
-            accumulator += nextFrame.calculateScore();
-          }
-          if (nextFrame.isStrike()) {
-            const frameAfterNextFrame: Frame = this.fetchFrameAfterNextFrame(playedFrame);
-            accumulator += nextFrame.calculateScore();
-            accumulator += frameAfterNextFrame.calculateScore();
-          }
-        }
+        accumulator = this.calculateStrikeFrameScore(playedFrame, accumulator);
       }
       if (playedFrame.isSpare()) {
         const nextFrame: Frame = this.fetchNextFrame(playedFrame);
@@ -39,6 +29,21 @@ class Game {
       }
       accumulator += playedFrame.calculateScore();
     });
+    return accumulator;
+  }
+
+  private calculateStrikeFrameScore(playedFrame: Frame, accumulator: number) {
+    const nextFrame: Frame = this.fetchNextFrame(playedFrame);
+    if (nextFrame) {
+      if (!nextFrame.isStrike()) {
+        accumulator += nextFrame.calculateScore();
+      }
+      if (nextFrame.isStrike()) {
+        const frameAfterNextFrame: Frame = this.fetchFrameAfterNextFrame(playedFrame);
+        accumulator += nextFrame.calculateScore();
+        accumulator += frameAfterNextFrame.calculateScore();
+      }
+    }
     return accumulator;
   }
 
