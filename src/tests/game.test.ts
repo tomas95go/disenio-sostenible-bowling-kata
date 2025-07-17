@@ -1,11 +1,11 @@
 import { expect } from '@jest/globals';
 
-class Game {
+class BowlingGame {
   readonly frames: number = 10;
   playedFrames: Frame[] = [];
 
-  static start(): Game {
-    return new Game();
+  static start(): BowlingGame {
+    return new BowlingGame();
   }
 
   constructor() {}
@@ -164,16 +164,16 @@ class Frame {
   }
 }
 
-describe('game module', () => {
+describe('a bowling game', () => {
   it('should initialize a new game', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     expect(game.score()).toBe(0);
     expect(game.frames).toBe(10);
   });
 
   it('should play 1 frame when game plays', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     const frame = 1;
     const frameAttempt = 1;
@@ -188,7 +188,7 @@ describe('game module', () => {
   });
 
   it('should play 1 frame where player scores a strike', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     const frame = 1;
     const frameAttempt = 1;
@@ -204,7 +204,7 @@ describe('game module', () => {
   });
 
   it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -231,7 +231,7 @@ describe('game module', () => {
   });
 
   it('should play 1 frame where player scores a spare', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -252,7 +252,7 @@ describe('game module', () => {
   });
 
   it('should play 2 frames where player scores a spare on frame 1 and does an open frame on 2', () => {
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -287,7 +287,7 @@ describe('game module', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 4;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -312,7 +312,7 @@ describe('game module', () => {
 
     const lastFrame = 10;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -345,7 +345,7 @@ describe('game module', () => {
 
     const lastFrame = 10;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -369,7 +369,7 @@ describe('game module', () => {
     const sixthFrame = 6;
     const sixthFrameFirstAttemptKnockedDownPinsByPlayer = 10;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -391,7 +391,7 @@ describe('game module', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 0;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -414,7 +414,7 @@ describe('game module', () => {
     const secondAttempt = 2;
     const secondAttemptknockedDownPinsByPlayer = 1;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -451,7 +451,7 @@ describe('game module', () => {
 
     const knockedDownPinsByPlayerOnMissedAttempt = 0;
 
-    const game = Game.start();
+    const game = BowlingGame.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -486,7 +486,7 @@ describe('game module', () => {
   });
 });
 
-describe('frame module', () => {
+describe('frame behavior of bowling game', () => {
   it('should initialize a frame when game plays', () => {
     const frame: Frame = Frame.create(1);
 
