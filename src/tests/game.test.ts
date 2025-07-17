@@ -85,8 +85,6 @@ class Frame {
   private score: number = 0;
   private firstAttemptScore: number = 0;
   private secondAttemptScore: number = 0;
-  private strike: boolean = false;
-  private spare: boolean = false;
 
   static create(number: number): Frame {
     return new Frame(number);
@@ -105,12 +103,6 @@ class Frame {
     if (this.currentAttempt <= this.maxAttempts) {
       this.addScore(pins);
       this.knockDown(pins);
-      if (this.isStrike()) {
-        this.strike = true;
-      }
-      if (this.isSpare()) {
-        this.spare = true;
-      }
       if (this.isSpare() && this.isLastFrame() && this.isSecondAttempt()) {
         const extraAttemptOnLastFrame = 1;
         this.maxAttempts += extraAttemptOnLastFrame;
