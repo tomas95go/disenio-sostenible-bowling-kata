@@ -5,7 +5,7 @@ class Game {
   readonly frames: number;
   playedFrames: Frame[] = [];
 
-  static initialize(player: string, frames: number): Game {
+  static start(player: string, frames: number): Game {
     return new Game(player, frames);
   }
 
@@ -179,7 +179,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 1;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     expect(game.player).toBe('Ryu');
     expect(game.score()).toBe(0);
@@ -190,7 +190,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 1;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     const currentFrame = 1;
     const currentFrameAttempt = 1;
@@ -208,7 +208,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 1;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     const currentFrame = 1;
     const currentFrameAttempt = 1;
@@ -228,7 +228,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 2;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -259,7 +259,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 1;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -284,7 +284,7 @@ describe('game module', () => {
     const player = 'Ryu';
     const frames = 2;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -322,7 +322,7 @@ describe('game module', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 4;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -349,7 +349,7 @@ describe('game module', () => {
 
     const lastFrame = 10;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -384,7 +384,7 @@ describe('game module', () => {
 
     const lastFrame = 10;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -410,7 +410,7 @@ describe('game module', () => {
     const sixthFrame = 6;
     const sixthFrameFirstAttemptKnockedDownPinsByPlayer = 10;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -434,7 +434,7 @@ describe('game module', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 0;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -459,7 +459,7 @@ describe('game module', () => {
     const secondAttempt = 2;
     const secondAttemptknockedDownPinsByPlayer = 1;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -498,7 +498,7 @@ describe('game module', () => {
 
     const knockedDownPinsByPlayerOnMissedAttempt = 0;
 
-    const game = Game.initialize(player, frames);
+    const game = Game.start(player, frames);
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
