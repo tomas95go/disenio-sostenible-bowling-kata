@@ -16,17 +16,17 @@ class Game {
   }
 
   score(): number {
-    let accumulator = 0;
+    let score = 0;
     this.playedFrames.forEach((playedFrame) => {
       if (playedFrame.isStrike()) {
-        accumulator = this.calculateStrikeFrameScore(playedFrame, accumulator);
+        score = this.calculateStrikeFrameScore(playedFrame, score);
       }
       if (playedFrame.isSpare()) {
-        accumulator = this.calculateSpareFrameScore(playedFrame, accumulator);
+        score = this.calculateSpareFrameScore(playedFrame, score);
       }
-      accumulator += playedFrame.calculateScore();
+      score += playedFrame.calculateScore();
     });
-    return accumulator;
+    return score;
   }
 
   private calculateSpareFrameScore(playedFrame: Frame, score: number) {
