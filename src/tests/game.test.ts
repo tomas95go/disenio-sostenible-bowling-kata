@@ -17,7 +17,7 @@ class Game {
     currentFrame.play(frameAttempt, pins);
   }
 
-  calculateScore(): number {
+  score(): number {
     let accumulator = 0;
     this.playedFrames.forEach((playedFrame) => {
       if (playedFrame.isStrike()) {
@@ -178,7 +178,7 @@ describe('game module', () => {
 
     const game = Game.start(frames);
 
-    expect(game.calculateScore()).toBe(0);
+    expect(game.score()).toBe(0);
     expect(game.frames).toBe(frames);
   });
 
@@ -215,7 +215,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(1);
     expect(gamePlayedFrames).toBe(aSingleFramePlayed);
-    expect(game.calculateScore()).toBe(10);
+    expect(game.score()).toBe(10);
   });
 
   it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
@@ -245,7 +245,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(2);
     expect(gamePlayedFrames).toBe(aCoupleFramesPlayed);
-    expect(game.calculateScore()).toBe(22);
+    expect(game.score()).toBe(22);
   });
 
   it('should play 1 frame where player scores a spare', () => {
@@ -269,7 +269,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(1);
     expect(gamePlayedFrames).toBe(aSingleFramePlayed);
-    expect(game.calculateScore()).toBe(10);
+    expect(game.score()).toBe(10);
   });
 
   it('should play 2 frames where player scores a spare on frame 1 and does an open frame on 2', () => {
@@ -304,7 +304,7 @@ describe('game module', () => {
 
     expect(game.frames).toBe(2);
     expect(gamePlayedFrames).toBe(aCoupleFramesPlayed);
-    expect(game.calculateScore()).toBe(17);
+    expect(game.score()).toBe(17);
   });
 
   it('should play a complete game where player scores all open frames', () => {
@@ -320,7 +320,7 @@ describe('game module', () => {
       }
     }
 
-    const gameScore = game.calculateScore();
+    const gameScore = game.score();
 
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(80);
@@ -356,7 +356,7 @@ describe('game module', () => {
     game.play(lastFrame, thirdAttempt, firstFrameFirstAttemptKnockedDownPinsByPlayer);
 
     expect(game.frames).toBe(10);
-    expect(game.calculateScore()).toBe(140);
+    expect(game.score()).toBe(140);
   });
 
   it('should play a complete game where player scores all strikes', () => {
@@ -385,7 +385,7 @@ describe('game module', () => {
     game.play(lastFrame, thirdAttempt, thirdFrameFirstAttemptKnockedDownPinsByPlayer);
 
     expect(game.frames).toBe(10);
-    expect(game.calculateScore()).toBe(300);
+    expect(game.score()).toBe(300);
   });
 
   it('should play a complete game where player scores 1 strike on frame 6 and the rest are open frame', () => {
@@ -412,7 +412,7 @@ describe('game module', () => {
     }
 
     expect(game.frames).toBe(10);
-    expect(game.calculateScore()).toBe(50);
+    expect(game.score()).toBe(50);
   });
 
   it('should play a complete game where player misses on ALL frames, scoring 0', () => {
@@ -428,7 +428,7 @@ describe('game module', () => {
       }
     }
 
-    const gameScore = game.calculateScore();
+    const gameScore = game.score();
 
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(0);
@@ -458,7 +458,7 @@ describe('game module', () => {
       }
     }
 
-    const gameScore = game.calculateScore();
+    const gameScore = game.score();
 
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(20);
@@ -510,7 +510,7 @@ describe('game module', () => {
       }
     }
 
-    const gameScore = game.calculateScore();
+    const gameScore = game.score();
 
     expect(game.frames).toBe(10);
     expect(gameScore).toBe(20);
