@@ -170,14 +170,6 @@ class Frame {
   getFirstAttemptScore(): number {
     return this.firstAttemptScore;
   }
-
-  getStrike(): boolean {
-    return this.strike;
-  }
-
-  getSpare(): boolean {
-    return this.spare;
-  }
 }
 
 describe('game module', () => {
@@ -577,7 +569,7 @@ describe('frame module', () => {
     expect(frame.getAttempt()).toBe(firstAttempt);
     expect(frame.getLeftOverPins()).toBe(0);
     expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins);
-    expect(frame.getStrike()).toBe(true);
+    expect(frame.isStrike()).toBe(true);
   });
 
   it('should determine spare when a player ends up knocking down all 10 pins in 2st attempt of a frame', () => {
@@ -593,6 +585,6 @@ describe('frame module', () => {
     expect(frame.getAttempt()).toBe(secondAttempt);
     expect(frame.getLeftOverPins()).toBe(0);
     expect(frame.calculateScore()).toBe(firstAttemptKnockedOutPins + secondAttemptKnockedOutPins);
-    expect(frame.getSpare()).toBe(true);
+    expect(frame.isSpare()).toBe(true);
   });
 });
