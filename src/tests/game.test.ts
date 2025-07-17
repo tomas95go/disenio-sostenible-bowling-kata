@@ -3,7 +3,6 @@ import { expect } from '@jest/globals';
 class Game {
   readonly player: string;
   readonly frames: number;
-  currentFrame: number;
   playedFrames: Frame[] = [];
 
   static initialize(player: string, frames: number): Game {
@@ -16,7 +15,6 @@ class Game {
   }
 
   play(frame: number, frameAttempt: number, pins: number): void {
-    this.currentFrame = frame;
     const currentFrame: Frame = this.getCurrentFrame(frame);
     currentFrame.play(frameAttempt, pins);
   }
@@ -65,7 +63,7 @@ class Game {
     const currentFrame: Frame = this.playedFrames.find((playedFrame: Frame) => playedFrame.number === frame);
 
     if (!currentFrame) {
-      const newFrame: Frame = Frame.create(this.currentFrame);
+      const newFrame: Frame = Frame.create(frame);
       this.playedFrames.push(newFrame);
       return newFrame;
     }
@@ -200,7 +198,10 @@ describe('game module', () => {
 
     game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
 
-    expect(game.currentFrame).toBe(1);
+    const aSingleFramePlayed = 1;
+    const gamePlayedFrames = game.playedFrames.length;
+
+    expect(gamePlayedFrames).toBe(aSingleFramePlayed);
   });
 
   it('should play 1 frame where player scores a strike', () => {
@@ -215,8 +216,11 @@ describe('game module', () => {
 
     game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
 
+    const aSingleFramePlayed = 1;
+    const gamePlayedFrames = game.playedFrames.length;
+
     expect(game.frames).toBe(1);
-    expect(game.currentFrame).toBe(1);
+    expect(gamePlayedFrames).toBe(aSingleFramePlayed);
     expect(game.score()).toBe(10);
   });
 
@@ -243,8 +247,11 @@ describe('game module', () => {
 
     game.play(secondFrame, secondFrameSecondAttempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
 
+    const aCoupleFramesPlayed = 2;
+    const gamePlayedFrames = game.playedFrames.length;
+
     expect(game.frames).toBe(2);
-    expect(game.currentFrame).toBe(2);
+    expect(gamePlayedFrames).toBe(aCoupleFramesPlayed);
     expect(game.score()).toBe(22);
   });
 
@@ -265,8 +272,11 @@ describe('game module', () => {
 
     game.play(firstFrame, firstFrameSecondAttempt, firstFrameSecondAttemptKnockedDownPinsByPlayer);
 
+    const aSingleFramePlayed = 1;
+    const gamePlayedFrames = game.playedFrames.length;
+
     expect(game.frames).toBe(1);
-    expect(game.currentFrame).toBe(1);
+    expect(gamePlayedFrames).toBe(aSingleFramePlayed);
     expect(game.score()).toBe(10);
   });
 
@@ -298,8 +308,11 @@ describe('game module', () => {
 
     game.play(secondFrame, secondFrameSecondAttempt, secondFrameSecondAttemptKnockedDownPinsByPlayer);
 
+    const aCoupleFramesPlayed = 2;
+    const gamePlayedFrames = game.playedFrames.length;
+
     expect(game.frames).toBe(2);
-    expect(game.currentFrame).toBe(2);
+    expect(gamePlayedFrames).toBe(aCoupleFramesPlayed);
     expect(game.score()).toBe(17);
   });
 
