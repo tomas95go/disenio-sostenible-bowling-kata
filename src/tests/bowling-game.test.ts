@@ -1,179 +1,17 @@
 import { expect } from '@jest/globals';
-
-class BowlingGame {
-  readonly frames: number = 10;
-  playedFrames: Frame[] = [];
-
-  static start(): BowlingGame {
-    return new BowlingGame();
-  }
-
-  constructor() {}
-
-  play(frame: number, frameAttempt: number, pins: number): void {
-    const currentFrame: Frame = this.getCurrentFrame(frame);
-    currentFrame.play(frameAttempt, pins);
-  }
-
-  score(): number {
-    let score = 0;
-    this.playedFrames.forEach((playedFrame) => {
-      if (playedFrame.isStrike()) {
-        score = this.calculateStrikeFrameScore(playedFrame, score);
-      }
-      if (playedFrame.isSpare()) {
-        score = this.calculateSpareFrameScore(playedFrame, score);
-      }
-      score += playedFrame.calculateScore();
-    });
-    return score;
-  }
-
-  private calculateSpareFrameScore(playedFrame: Frame, score: number) {
-    const nextFrame: Frame = this.fetchNextFrame(playedFrame);
-    if (nextFrame) {
-      score += nextFrame.getFirstAttemptScore();
-    }
-    return score;
-  }
-
-  private calculateStrikeFrameScore(playedFrame: Frame, score: number) {
-    const nextFrame: Frame = this.fetchNextFrame(playedFrame);
-    if (nextFrame) {
-      if (!nextFrame.isStrike()) {
-        score += nextFrame.calculateScore();
-      }
-      if (nextFrame.isStrike()) {
-        const frameAfterNextFrame: Frame = this.fetchFrameAfterNextFrame(playedFrame);
-        score += nextFrame.calculateScore();
-        score += frameAfterNextFrame.calculateScore();
-      }
-    }
-    return score;
-  }
-
-  private fetchFrameAfterNextFrame(playedFrame: Frame): Frame {
-    const NEXT_FRAME_NUMBER = 2;
-    return this.playedFrames.find((nextFrame: Frame) => playedFrame.number + NEXT_FRAME_NUMBER === nextFrame.number);
-  }
-
-  private fetchNextFrame(playedFrame: Frame): Frame {
-    const NEXT_FRAME_NUMBER = 1;
-    const nextFrame: Frame = this.playedFrames.find(
-      (nextFrame: Frame) => playedFrame.number + NEXT_FRAME_NUMBER === nextFrame.number
-    );
-    return nextFrame;
-  }
-
-  private getCurrentFrame(frame: number): Frame {
-    const currentFrame: Frame = this.playedFrames.find((playedFrame: Frame) => playedFrame.number === frame);
-
-    if (!currentFrame) {
-      const newFrame: Frame = Frame.create(frame);
-      this.playedFrames.push(newFrame);
-      return newFrame;
-    }
-    return currentFrame;
-  }
-}
-
-class Frame {
-  readonly number: number;
-  maxAttempts: number = 2;
-  private leftOverPins: number = 10;
-  private currentAttempt: number;
-  private score: number = 0;
-  private firstAttemptScore: number = 0;
-  private secondAttemptScore: number = 0;
-
-  static create(number: number): Frame {
-    return new Frame(number);
-  }
-
-  constructor(number: number) {
-    this.number = number;
-  }
-
-  knockDown(pins: number) {
-    this.leftOverPins = this.leftOverPins - pins;
-  }
-
-  play(attempt: number, pins: number): void {
-    this.currentAttempt = attempt;
-    if (this.currentAttempt <= this.maxAttempts) {
-      this.addScore(pins);
-      this.knockDown(pins);
-      if (this.isSpare() && this.isLastFrame() && this.isSecondAttempt()) {
-        const extraAttemptOnLastFrame = 1;
-        this.maxAttempts += extraAttemptOnLastFrame;
-      }
-    }
-  }
-
-  private addScore(pins: number) {
-    const firstAttempt = 1;
-    const secondAttempt = 2;
-    const thirdAttempt = 3;
-    if (this.currentAttempt === firstAttempt) {
-      this.firstAttemptScore = this.firstAttemptScore + pins;
-    }
-    if (this.currentAttempt === secondAttempt) {
-      this.secondAttemptScore = this.secondAttemptScore + pins;
-    }
-    if (this.currentAttempt === thirdAttempt) {
-      this.score = this.score + pins;
-    }
-  }
-
-  isSpare() {
-    const secondAttempt = 2;
-    const noLeftOverPins = 0;
-    return this.currentAttempt === secondAttempt && this.leftOverPins === noLeftOverPins;
-  }
-
-  isStrike(): boolean {
-    const firstAttempt = 1;
-    const noLeftOverPins = 0;
-    return this.currentAttempt === firstAttempt && this.leftOverPins === noLeftOverPins;
-  }
-
-  isLastFrame(): boolean {
-    const lastFrame = 10;
-    return this.number === lastFrame;
-  }
-
-  isSecondAttempt(): boolean {
-    const secondAttempt = 2;
-    return this.currentAttempt === secondAttempt;
-  }
-
-  getLeftOverPins(): number {
-    return this.leftOverPins;
-  }
-
-  getAttempt(): number {
-    return this.currentAttempt;
-  }
-
-  calculateScore(): number {
-    return this.score + this.firstAttemptScore + this.secondAttemptScore;
-  }
-
-  getFirstAttemptScore(): number {
-    return this.firstAttemptScore;
-  }
-}
+import { Game } from '../bowling/game';
+import { Frame } from '../bowling/frame';
 
 describe('a bowling game', () => {
   it('should initialize a new game', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     expect(game.score()).toBe(0);
     expect(game.frames).toBe(10);
   });
 
   it('should play 1 frame when game plays', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     const frame = 1;
     const frameAttempt = 1;
@@ -188,7 +26,7 @@ describe('a bowling game', () => {
   });
 
   it('should play 1 frame where player scores a strike', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     const frame = 1;
     const frameAttempt = 1;
@@ -204,7 +42,7 @@ describe('a bowling game', () => {
   });
 
   it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -231,7 +69,7 @@ describe('a bowling game', () => {
   });
 
   it('should play 1 frame where player scores a spare', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -252,7 +90,7 @@ describe('a bowling game', () => {
   });
 
   it('should play 2 frames where player scores a spare on frame 1 and does an open frame on 2', () => {
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     const firstFrame = 1;
     const firstFrameAttempt = 1;
@@ -287,7 +125,7 @@ describe('a bowling game', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 4;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -312,7 +150,7 @@ describe('a bowling game', () => {
 
     const lastFrame = 10;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -345,7 +183,7 @@ describe('a bowling game', () => {
 
     const lastFrame = 10;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame < game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -369,7 +207,7 @@ describe('a bowling game', () => {
     const sixthFrame = 6;
     const sixthFrameFirstAttemptKnockedDownPinsByPlayer = 10;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -391,7 +229,7 @@ describe('a bowling game', () => {
     const maxAttemptsPerFrame = 2;
     const knockedDownPinsByPlayer = 0;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -414,7 +252,7 @@ describe('a bowling game', () => {
     const secondAttempt = 2;
     const secondAttemptknockedDownPinsByPlayer = 1;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
@@ -451,7 +289,7 @@ describe('a bowling game', () => {
 
     const knockedDownPinsByPlayerOnMissedAttempt = 0;
 
-    const game = BowlingGame.start();
+    const game = Game.start();
 
     for (let frame = 1; frame <= game.frames; frame++) {
       for (let attempt = 1; attempt <= maxAttemptsPerFrame; attempt++) {
