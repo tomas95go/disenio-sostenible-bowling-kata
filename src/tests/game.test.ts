@@ -29,27 +29,27 @@ class Game {
     return accumulator;
   }
 
-  private calculateSpareFrameScore(playedFrame: Frame, accumulator: number) {
+  private calculateSpareFrameScore(playedFrame: Frame, score: number) {
     const nextFrame: Frame = this.fetchNextFrame(playedFrame);
     if (nextFrame) {
-      accumulator += nextFrame.getFirstAttemptScore();
+      score += nextFrame.getFirstAttemptScore();
     }
-    return accumulator;
+    return score;
   }
 
-  private calculateStrikeFrameScore(playedFrame: Frame, accumulator: number) {
+  private calculateStrikeFrameScore(playedFrame: Frame, score: number) {
     const nextFrame: Frame = this.fetchNextFrame(playedFrame);
     if (nextFrame) {
       if (!nextFrame.isStrike()) {
-        accumulator += nextFrame.calculateScore();
+        score += nextFrame.calculateScore();
       }
       if (nextFrame.isStrike()) {
         const frameAfterNextFrame: Frame = this.fetchFrameAfterNextFrame(playedFrame);
-        accumulator += nextFrame.calculateScore();
-        accumulator += frameAfterNextFrame.calculateScore();
+        score += nextFrame.calculateScore();
+        score += frameAfterNextFrame.calculateScore();
       }
     }
-    return accumulator;
+    return score;
   }
 
   private fetchFrameAfterNextFrame(playedFrame: Frame): Frame {
