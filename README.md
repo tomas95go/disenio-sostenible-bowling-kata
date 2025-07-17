@@ -9,13 +9,24 @@ Implementation of the Bowling Game in TypeScript and Jest.
 ---
 
 ## 📚 Index
-- [📦 How to Install](#-how-to-install)
+
+- [➡️ Getting started](#-getting-started)
 - [🧪 How to Test](#-how-to-test)
 
 ---
 
-## 📦 How to Install
-TBD 🔜
+## ➡️ Getting started
+
+Make sure you're using Node version >= 20.10.0
+
+Install using [`yarn`](https://yarnpkg.com/en/package/jest):
+
+```bash
+yarn install
+```
 
 ## 🧪 How to Test
-TBD 🔜
+
+```bash
+yarn run test
+```
