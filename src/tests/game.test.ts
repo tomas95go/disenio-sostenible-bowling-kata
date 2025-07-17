@@ -175,11 +175,11 @@ describe('game module', () => {
   it('should play 1 frame when game plays', () => {
     const game = Game.start();
 
-    const currentFrame = 1;
-    const currentFrameAttempt = 1;
+    const frame = 1;
+    const frameAttempt = 1;
     const knockedDownPinsByPlayer = 5;
 
-    game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
+    game.play(frame, frameAttempt, knockedDownPinsByPlayer);
 
     const aSingleFramePlayed = 1;
     const gamePlayedFrames = game.playedFrames.length;
@@ -190,17 +190,17 @@ describe('game module', () => {
   it('should play 1 frame where player scores a strike', () => {
     const game = Game.start();
 
-    const currentFrame = 1;
-    const currentFrameAttempt = 1;
+    const frame = 1;
+    const frameAttempt = 1;
     const knockedDownPinsByPlayer = 10;
 
-    game.play(currentFrame, currentFrameAttempt, knockedDownPinsByPlayer);
+    game.play(frame, frameAttempt, knockedDownPinsByPlayer);
 
     const aSingleFramePlayed = 1;
     const gamePlayedFrames = game.playedFrames.length;
 
     expect(gamePlayedFrames).toBe(aSingleFramePlayed);
-    expect(game.score()).toBe(10);
+    expect(game.score()).toBe(knockedDownPinsByPlayer);
   });
 
   it('should play 2 frames where player scores a strike on frame 1 and does an open frame on 2', () => {
