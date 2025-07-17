@@ -22,13 +22,18 @@ class Game {
         accumulator = this.calculateStrikeFrameScore(playedFrame, accumulator);
       }
       if (playedFrame.isSpare()) {
-        const nextFrame: Frame = this.fetchNextFrame(playedFrame);
-        if (nextFrame) {
-          accumulator += nextFrame.getFirstAttemptScore();
-        }
+        accumulator = this.calculateSpareFrameScore(playedFrame, accumulator);
       }
       accumulator += playedFrame.calculateScore();
     });
+    return accumulator;
+  }
+
+  private calculateSpareFrameScore(playedFrame: Frame, accumulator: number) {
+    const nextFrame: Frame = this.fetchNextFrame(playedFrame);
+    if (nextFrame) {
+      accumulator += nextFrame.getFirstAttemptScore();
+    }
     return accumulator;
   }
 
